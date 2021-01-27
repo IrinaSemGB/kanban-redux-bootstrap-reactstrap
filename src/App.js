@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react';
+import {connect} from "react-redux";
+import 'bootstrap/dist/css/bootstrap.css';
+import Column from "./Colomn";
 
-function App() {
+function App(props) {
+
+    const [modalAdd, setModalAdd] = useState(false);
+    const toggleAdd = () => setModalAdd(!modalAdd);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+
+        <div className="container">
+            <h1>Kanban Board</h1>
+            <button onClick={toggleAdd} type="button" className="btn btn-success btn-sm"> Create New Task </button>
+            <hr/>
+
+            <div className="row">
+                {props.statuses.map((el, index) =>
+                    <Column key={index}
+                            status={el}
+                            modalAdd={modalAdd}
+                            setModalAdd={setModalAdd}
+                    />)
+                }
+            </div>
+        </div>
+
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+    tasks: state.tasks,
+    statuses: state.statuses
+});
+
+export default connect(mapStateToProps, null) (App);
